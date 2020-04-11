@@ -122,13 +122,10 @@ module.exports.delete = function (req, res) {
 };
 
 module.exports.login = function (req, res) {
-    // console.log(req.body.username);
-    let quyen = parseInt(req.params.right);
 
     // find the user
     Model.findOne({
-        username: req.body.username,
-        quyen: quyen
+        email: req.body.email
     }).select("email password right").exec(function (err, user) {
 
         if (err) return res.json({ success: false, message: err });
@@ -160,35 +157,15 @@ module.exports.login = function (req, res) {
     });
 }
 
-// module.exports.gg = function (req, res) {
-//     Model.findOne({ googleId: req.body.id }, function (err, user) {
-//         if (err) return res.json({ success: false, message: err });
-//         if (user) {
-//             var token = createToken(user);
-//             return res.json({ success: true, username: user.username, token: token });
-//         } else {
-//             var newUser = new Model();
-//             newUser.username = req.body.id + 'gg';
-//             bcrypt.hash(req.body.id, null, null, function (err, result) {
-//                 if (err) console.log(err);
-//                 newUser.password = result;
-//             });
-//             newUser.quyen = 1;
-//             newUser.googleId = req.body.id;
-//             newUser.save(function (err, nu) {
-//                 if (err) {
-//                     return res.json({ success: false, message: err });
-//                 }
-//                 var client = new Client();
-//                 client.username = nu.username;
-//                 client.name = req.body.name;
-//                 client.email = req.body.email;
-//                 client.save(function (err) {
-//                     if (err) return res.json({ success: false, message: err });
-//                     var token = createToken(nu);
-//                     return res.json({ success: true, username: nu.username, token: token });
-//                 });
-//             });
-//         }
-//     });
-// };
+module.exports.gg = function (req, res) {
+    console.log(req.body);
+    Model.findOne({ email: req.body.email }, function (err, user) {
+        if (err) return res.json({ success: false, message: err });
+        if (user) {
+            var token = createToken(user);
+            return res.json({ success: true, email: user.email, token: token });
+        } else {
+            return res.json({success: false, message: 'Đăng nhập thất bại'});
+        }
+    });
+};

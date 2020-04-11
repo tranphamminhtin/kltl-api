@@ -13,7 +13,7 @@ module.exports.verify = function (req, res, next) {
             jwt.verify(token, superSecret, function (err, authData) {
                 if (err) {
                     req.user = null;
-                    return res.json({success: false, login: true, message: 'Xác thực thất bại'});
+                    return res.json({ success: false, login: true, message: 'Xác thực thất bại' });
                 } else {
                     req.user = authData;
                     return next();
@@ -33,25 +33,21 @@ module.exports.verify = function (req, res, next) {
     }
 }
 
-// module.exports.verifySocialToken = function (req, res, next) {
-//     if (req.body) {
-//         console.log(req.body);
-//         if (req.body.authToken && req.body.id && req.body.provider) {
-//             var url = 'https://';
-//             if(req.body.provider === 'FACEBOOK'){
-//                 url += 'graph.facebook.com/me?access_token=' + req.body.authToken;
-//             } else {
-//                 if(req.body.provider === 'GOOGLE'){
-//                     url += 'www.googleapis.com/oauth2/v1/tokeninfo?access_token=' + req.body.authToken;
-//                 } else return res.send({ success: false, message: 'Không xác thực' });
-//             }
-//             request.get(url, {json: true}, (err, response, body) => {
-//                 if(err) return res.send({ success: false, message: err });
-//                 if(body.error) return res.send({ success: false, message: body });
-//                 return next();
-//             });
-//         } else return res.send({ success: false, message: 'Không xác thực' });
-//     } else {
-//         return res.send({ success: false, message: 'Không xác thực' });
-//     }
-// }
+module.exports.verifySocialToken = function (req, res, next) {
+    if (req.body) {
+        console.log(req.body);
+        if (req.body.authToken && req.body.id && req.body.provider) {
+            var url = 'https://';
+            if (req.body.provider === 'GOOGLE') {
+                url += 'www.googleapis.com/oauth2/v1/tokeninfo?access_token=' + req.body.authToken;
+            } else return res.send({ success: false, message: 'Không xác thực' });
+            request.get(url, { json: true }, (err, response, body) => {
+                if (err) return res.send({ success: false, message: err });
+                if (body.error) return res.send({ success: false, message: body });
+                return next();
+            });
+        } else return res.send({ success: false, message: 'Không xác thực' });
+    } else {
+        return res.send({ success: false, message: 'Không xác thực' });
+    }
+}

@@ -1,5 +1,5 @@
 var controller = require('../controllers/user');
-// var authMiddleware = require('../controllers/auth');
+var authMiddleware = require('../controllers/auth');
 
 module.exports = function (express) {
     var router = express.Router();
@@ -9,7 +9,9 @@ module.exports = function (express) {
     router.post('/', controller.add);
 
     router.put('/change-password/:email', controller.changePassword);
-    router.route('/:email')
+    router.post('/login', controller.login);
+    router.post('/google', authMiddleware.verifySocialToken, controller.gg);
+    router.route('/users/:email')
 
         .get(controller.search)
 
