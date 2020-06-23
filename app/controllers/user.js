@@ -11,7 +11,7 @@ var createToken = function (user) {
         email: user.email,
         userId: user._id
     }, superSecret, {
-        expiresIn: '5s'
+        expiresIn: '24h'
     });
     return token;
 }
@@ -83,8 +83,8 @@ module.exports.updateInformation = function (req, res) {
         numberphone: req.body.numberphone,
         right: req.body.right
     }, (err, model) => {
-        if(err) return res.json({success: false, message: err});
-        return res.json({success: true, message: 'Sửa thành công'});
+        if (err) return res.json({ success: false, message: err });
+        return res.json({ success: true, message: 'Sửa thành công' });
     });
 }
 
@@ -150,6 +150,8 @@ module.exports.login = function (req, res) {
                 return res.json({
                     success: true,
                     message: 'Đăng nhập thành công',
+                    email: user.email,
+                    right: user.right,
                     token: token
                 });
             }
@@ -163,9 +165,9 @@ module.exports.gg = function (req, res) {
         if (err) return res.json({ success: false, message: err });
         if (user) {
             var token = createToken(user);
-            return res.json({ success: true, email: user.email, token: token });
+            return res.json({ success: true, email: user.email, right: user.right, token: token });
         } else {
-            return res.json({success: false, message: 'Đăng nhập thất bại'});
+            return res.json({ success: false, message: 'Đăng nhập thất bại' });
         }
     });
 };

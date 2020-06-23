@@ -35,7 +35,6 @@ module.exports.verify = function (req, res, next) {
 
 module.exports.verifySocialToken = function (req, res, next) {
     if (req.body) {
-        console.log(req.body);
         if (req.body.authToken && req.body.id && req.body.provider) {
             var url = 'https://';
             if (req.body.provider === 'GOOGLE') {

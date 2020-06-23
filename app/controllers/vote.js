@@ -37,3 +37,12 @@ module.exports.delete = function (req, res) {
         return res.json({ success: true, message: 'Xóa thành công' });
     });
 };
+
+module.exports.getListVoteByIdLoanFa = function (req, res) {
+    Model.find({
+        loanFacilities: req.params.idLoan
+    }, function (err, vote) {
+        if (err) return res.json({ success: false, message: err });
+        return res.json({ success: true, message: vote });
+    });
+}

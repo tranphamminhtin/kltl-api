@@ -11,6 +11,9 @@ module.exports = function (express) {
     router.put('/change-password/:email', controller.changePassword);
     router.post('/login', controller.login);
     router.post('/google', authMiddleware.verifySocialToken, controller.gg);
+    router.get('/verifyToken', authMiddleware.verify, function (req, res) {
+        return res.json({ success: true, message: 'hooray! welcome to our api!', data: req.user });
+    });
     router.route('/users/:email')
 
         .get(controller.search)
@@ -19,7 +22,7 @@ module.exports = function (express) {
 
         .delete(controller.delete);
 
-        // .delete(authMiddleware.verify, controller.delete);
+    // .delete(authMiddleware.verify, controller.delete);
 
     return router;
 };

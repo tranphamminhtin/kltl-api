@@ -7,6 +7,7 @@ module.exports = function (express) {
     ////////////////////
     router.get('/', controller.getList);
     router.post('/', controller.add);
+    router.get('/findByIdLoan/:idLoan', controller.getListVoteByIdLoanFa);
 
     router.route('/:id')
 
@@ -16,7 +17,7 @@ module.exports = function (express) {
 
         .delete(controller.delete);
 
-        // .delete(authMiddleware.verify, controller.delete);
+    // .delete(authMiddleware.verify, controller.delete);
 
     return router;
 };
