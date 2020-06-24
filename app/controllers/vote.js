@@ -38,7 +38,7 @@ module.exports.delete = function (req, res) {
     });
 };
 
-module.exports.getListVoteByIdLoanFa = function (req, res) {
+module.exports.getVoteByIdLoanFa = function (req, res) {
     Model.find({
         loanFacilities: req.params.idLoan
     }, function (err, vote) {

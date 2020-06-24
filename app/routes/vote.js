@@ -7,7 +7,7 @@ module.exports = function (express) {
     ////////////////////
     router.get('/', controller.getList);
     router.post('/', controller.add);
-    router.get('/findByIdLoan/:idLoan', controller.getListVoteByIdLoanFa);
+    router.get('/findByIdLoan/:idLoan', controller.getVoteByIdLoanFa);
 
     router.route('/:id')
 
