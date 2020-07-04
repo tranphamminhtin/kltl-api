@@ -8,6 +8,8 @@ module.exports = function (express) {
     router.get('/', controller.getList);
     router.post('/', controller.add);
 
+    router.get('/search', controller.search);
+
     router.route('/:id')
 
         .get(controller.search)
@@ -16,7 +18,7 @@ module.exports = function (express) {
 
         .delete(controller.delete);
 
-        // .delete(authMiddleware.verify, controller.delete);
+    // .delete(authMiddleware.verify, controller.delete);
 
     return router;
 };

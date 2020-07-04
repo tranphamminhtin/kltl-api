@@ -1,4 +1,5 @@
 var Model = require('../models/facilities');
+var Loan = require('../models/loan-facilities');
 
 module.exports.getList = function (req, res) {
     Model.find(function (err, model) {
@@ -47,5 +48,27 @@ module.exports.delete = function (req, res) {
     }, function (err, model) {
         if (err) return res.json({ success: false, message: err });
         return res.json({ success: true, message: 'Xóa thành công' });
+    });
+};
+
+module.exports.getByRoom = function (req, res) {
+    Loan.find({ room: req.params.id })
+    .distinct('facilities', function(err, results){
+        if(err) return res.json({success: false, message: err});
+        Model.find().where('_id').in(results).exec((error, models) => {
+            if(error) return res.json({success: false, message: error});
+            return res.json({success: true, message: models});
+        });
+    });
+};
+
+module.exports.getByManager = function (req, res) {
+    Loan.find({ manager: req.params.email })
+    .distinct('facilities', function(err, results){
+        if(err) return res.json({success: false, message: err});
+        Model.find().where('_id').in(results).exec((error, models) => {
+            if(error) return res.json({success: false, message: error});
+            return res.json({success: true, message: models});
+        });
     });
 };

@@ -52,3 +52,30 @@ module.exports.delete = function (req, res) {
         });
     });
 };
+
+module.exports.search = function (req, res) {
+    const facilities = req.query.facilities;
+    if (req.query.manager) {
+        const manager = req.query.manager;
+        Model.find({
+            facilities: facilities,
+            manager: manager
+        }, (err, model) => {
+            if (err) return res.json({ success: false, message: err });
+            return res.json({ success: true, message: model });
+        });
+    }
+    else
+        if (req.query.room) {
+            const room = req.query.room;
+            Model.find({
+                facilities: facilities,
+                room: room
+            }, (err, model) => {
+                if (err) return res.json({ success: false, message: err });
+                return res.json({ success: true, message: model });
+            });
+        }
+        else
+            return res.json({ success: false, message: 'Trống' });
+}
