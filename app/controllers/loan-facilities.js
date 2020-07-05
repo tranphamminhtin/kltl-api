@@ -53,7 +53,7 @@ module.exports.delete = function (req, res) {
     });
 };
 
-module.exports.search = function (req, res) {
+module.exports.searchByFacilities = function (req, res) {
     const facilities = req.query.facilities;
     if (req.query.manager) {
         const manager = req.query.manager;

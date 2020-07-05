@@ -8,7 +8,7 @@ module.exports = function (express) {
     router.get('/', controller.getList);
     router.post('/', controller.add);
 
-    router.get('/search', controller.search);
+    router.get('/search', controller.searchByFacilities);
 
     router.route('/:id')
 
