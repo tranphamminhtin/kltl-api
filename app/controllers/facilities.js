@@ -10,7 +10,7 @@ module.exports.getList = function (req, res) {
 
 module.exports.add = function (req, res) {
     console.log(req.body);
-    if(!req.file) return res.json({success: false, message: 'Không có hình'})
+    if (!req.file) return res.json({ success: false, message: 'Không có hình' })
     const serverName = 'http://localhost';
     // const serverName = require('os').hostname();
     const serverPort = require('../../config').port;
@@ -52,23 +52,74 @@ module.exports.delete = function (req, res) {
 };
 
 module.exports.getByRoom = function (req, res) {
-    Loan.find({ room: req.params.id })
-    .distinct('facilities', function(err, results){
-        if(err) return res.json({success: false, message: err});
-        Model.find().where('_id').in(results).exec((error, models) => {
-            if(error) return res.json({success: false, message: error});
-            return res.json({success: true, message: models});
-        });
-    });
+    const room = req.query.room;
+    const state = req.query.state;
+    let key = null;
+    if (state) {
+        switch (state) {
+            case 'Request': {
+                key = { request: true, state: 0 };
+                break;
+            }
+            case 'Allocate': {
+                key = { request: false, state: 0 };
+                break;
+            }
+            case 'Revoke': {
+                key = { request: false, state: 1 };
+                break;
+            }
+            default: break;
+        }
+        if (req.query.room != 'null') {
+            key.room = room;
+        }
+        Loan.find(key)
+            .distinct('facilities', function (err, results) {
+                if (err) return res.json({ success: false, message: err });
+                Model.find().where('_id').in(results).exec((error, models) => {
+                    if (error) return res.json({ success: false, message: error });
+                    return res.json({ success: true, message: models });
+                });
+            });
+    } else
+        return res.json({ success: false, message: 'Trống' });
+
 };
 
 module.exports.getByManager = function (req, res) {
-    Loan.find({ manager: req.params.email })
-    .distinct('facilities', function(err, results){
-        if(err) return res.json({success: false, message: err});
-        Model.find().where('_id').in(results).exec((error, models) => {
-            if(error) return res.json({success: false, message: error});
-            return res.json({success: true, message: models});
-        });
-    });
+    const email = req.query.manager;
+    const state = req.query.state;
+    let key = null;
+    if (state) {
+        switch (state) {
+            case 'Request': {
+                key = { request: true, state: 0 };
+                break;
+            }
+            case 'Allocate': {
+                key = { request: false, state: 0 };
+                break;
+            }
+            case 'Revoke': {
+                key = { request: false, state: 1 };
+                break;
+            }
+            default: break;
+        }
+        if (email != 'null') {
+            console.log(email);
+            key.manager = email;
+        }
+        Loan.find(key)
+            .distinct('facilities', function (err, results) {
+                if (err) return res.json({ success: false, message: err });
+                Model.find().where('_id').in(results).exec((error, models) => {
+                    if (error) return res.json({ success: false, message: error });
+                    return res.json({ success: true, message: models });
+                });
+            });
+    } else
+        return res.json({ success: false, message: 'Trống' });
+
 };

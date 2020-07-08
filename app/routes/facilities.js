@@ -9,8 +9,8 @@ module.exports = function (express) {
     router.get('/', controller.getList);
     router.post('/', upload.single('image'), controller.add);
 
-    router.get('/by-room/:id', controller.getByRoom);
-    router.get('/by-manager/:email', controller.getByManager);
+    router.get('/by-room', controller.getByRoom);
+    router.get('/by-manager', controller.getByManager);
 
     router.route('/:id')
 

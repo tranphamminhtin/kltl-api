@@ -64,8 +64,7 @@ module.exports.searchByFacilities = function (req, res) {
             if (err) return res.json({ success: false, message: err });
             return res.json({ success: true, message: model });
         });
-    }
-    else
+    } else {
         if (req.query.room) {
             const room = req.query.room;
             Model.find({
@@ -76,6 +75,19 @@ module.exports.searchByFacilities = function (req, res) {
                 return res.json({ success: true, message: model });
             });
         }
-        else
-            return res.json({ success: false, message: 'Trống' });
+        else {
+            if (facilities) {
+                Model.find({
+                    facilities: facilities
+                },
+                    (err, model) => {
+                        if (err) return res.json({ success: false, message: err });
+                        return res.json({ success: true, message: model });
+                    });
+            }
+            else
+                return res.json({ success: false, message: 'Trống' });
+        }
+    }
+
 }
