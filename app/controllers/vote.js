@@ -39,7 +39,7 @@ module.exports.delete = function (req, res) {
 };
 
 module.exports.getVoteByIdLoanFa = function (req, res) {
-    Model.find({
+    Model.findOne({
         loanFacilities: req.params.idLoan
     }, function (err, vote) {
         if (err) return res.json({ success: false, message: err });
