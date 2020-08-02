@@ -11,10 +11,7 @@ module.exports.getList = function (req, res) {
 module.exports.add = function (req, res) {
     console.log(req.body);
     if (!req.file) return res.json({ success: false, message: 'Không có hình' })
-    // const serverName = 'http://localhost';
-    const serverName = require('os').hostname();
-    const serverPort = require('../../config').port;
-    req.body.image = `${serverName}:${serverPort}/uploads/${req.file.filename}`;
+    req.body.image = `http://${req.headers.host}/uploads/${req.file.filename}`;
     Model.create(req.body, function (err, model) {
         if (err) return res.json({ success: false, message: err });
         return res.json({ success: true, message: model });
