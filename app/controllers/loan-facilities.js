@@ -10,6 +10,11 @@ module.exports.getList = function (req, res) {
 };
 
 module.exports.add = function (req, res) {
+    Facilities.findById(req.body.facilities, function (err, fa) {
+        if (err) return res.json({ success: false, message: err });
+        if (fa.quantity <= 0)
+            return res.json({ success: false, message: 'Hết số lượng' });
+    });
     Model.create(req.body, function (err, model) {
         if (err) return res.json({ success: false, message: err });
         if (req.body.request == false) {
@@ -38,6 +43,16 @@ module.exports.update = function (req, res) {
         if (!model) return res.json({ success: false, message: 'Trống' });
         let state = model.state;
         let request = model.request;
+        Facilities.findById(req.body.facilities, function (err, f) {
+            if (err) return res.json({ success: false, message: err });
+            if (f.quantity <= 0 && request == true && req.body.request == false) {
+                return res.json({ success: false, message: 'Hết số lượng' });
+            } else {
+                if(f.quantity <= 0 && state == 1 && req.body.state == 0)
+                return res.json({ success: false, message: 'Hết số lượng' });
+            }
+        });
+
         Model.findByIdAndUpdate(req.params.id, {
             room: req.body.room,
             unit: req.body.unit,
@@ -47,24 +62,24 @@ module.exports.update = function (req, res) {
             state: req.body.state,
             note: req.body.note,
             request: req.body.request
-        }, { new: true }, function (err, model) {
+        }, { new: true }, function (err, m) {
             if (err) return res.json({ success: false, message: err });
-            if (request == true && model.request == false) {
+            if (request == true && m.request == false) {
                 Facilities.findByIdAndUpdate(req.body.facilities, {
                     $inc: { quantity: -1 }
                 }, { new: true }, function (err, model) {
                     if (err) return res.json({ success: false, message: err });
                 });
             } else {
-                if (request == model.request) {
-                    if (state == 0 && model.state == 1) {
+                if (request == m.request) {
+                    if (state == 0 && m.state == 1) {
                         Facilities.findByIdAndUpdate(req.body.facilities, {
                             $inc: { quantity: 1 }
                         }, { new: true }, function (err, model) {
                             if (err) return res.json({ success: false, message: err });
                         });
                     }
-                    if (state == 1 && model.state == 0) {
+                    if (state == 1 && m.state == 0) {
                         Facilities.findByIdAndUpdate(req.body.facilities, {
                             $inc: { quantity: -1 }
                         }, { new: true }, function (err, model) {
